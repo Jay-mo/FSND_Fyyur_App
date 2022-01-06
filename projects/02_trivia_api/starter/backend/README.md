@@ -221,9 +221,7 @@ POST /questions
 - General
     - Creates a new questions using the values provided. Returns a success value
 
-    - Sample: ``` curl -X POST 'http://127.0.0.1:5000/questions/2' \
---header 'Content-Type: application/json' \
---data-raw '{
+    - Sample: ``` curl -X POST 'http://127.0.0.1:5000/questions/2' -H 'Content-Type: application/json' \ -d '{
     "answer": "Blood",
     "category": 1,
     "difficulty": 4,
