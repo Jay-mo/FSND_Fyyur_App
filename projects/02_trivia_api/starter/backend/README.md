@@ -102,7 +102,7 @@ GET '/categories'
 
 GET /categories
 - General
-    - Returns a dictionary of categories and success values
+    - Returns a dictionary of categories and success value
     - Sample: curl http://127.0.0.1:5000/categories
 
 ```
@@ -119,6 +119,91 @@ GET /categories
 }
 ```
 
+GET /questions
+- General
+    - Returns a list of question objects, success value, categories and current category
+    - Results are paginated in groups of 10. Include a request argument of page to choose a page number
+- Sample: curl ```http://127.0.0.1:5000/questions?page=2```
+
+```
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }, 
+    {
+      "answer": "Mona Lisa", 
+      "category": 2, 
+      "difficulty": 3, 
+      "id": 17, 
+      "question": "La Giaconda is better known as what?"
+    }, 
+    {
+      "answer": "One", 
+      "category": 2, 
+      "difficulty": 4, 
+      "id": 18, 
+      "question": "How many paintings did Van Gogh sell in his lifetime?"
+    }, 
+    {
+      "answer": "Jackson Pollock", 
+      "category": 2, 
+      "difficulty": 2, 
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    }, 
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 24, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 25, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    {
+      "answer": "Lake VIctoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 26, 
+      "question": "What is the largest lake in Africa?"
+    }
+  ], 
+  "success": true
+}
+```
 
 ## Testing
 To run the tests, run
