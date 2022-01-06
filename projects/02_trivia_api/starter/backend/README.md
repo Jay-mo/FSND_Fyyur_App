@@ -229,8 +229,8 @@ POST /questions
     "difficulty": 4,
     "id": 22,
     "question": "Hematology is a branch of medicine involving the study of what?"
-        }'
-    ```
+        }' ```
+    
 
 ## Testing
 To run the tests, run
