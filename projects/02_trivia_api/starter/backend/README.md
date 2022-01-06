@@ -103,7 +103,7 @@ GET '/categories'
 GET /categories
 - General
     - Returns a dictionary of categories and success value
-    - Sample: curl http://127.0.0.1:5000/categories
+    - Sample: curl ```http://127.0.0.1:5000/categories```
 
 ```
 {
@@ -204,6 +204,33 @@ GET /questions
   "success": true
 }
 ```
+
+DELETE /questions/<question_id>
+- General
+    - Deletes a question given the question id, if it exists. Returns a success value
+
+    - Sample:  ```curl -X DELETE http://127.0.0.1:5000/questions/2 ```
+
+```
+{
+        "success": True
+      }
+```
+
+POST /questions
+- General
+    - Creates a new questions using the values provided. Returns a success value
+
+    - Sample: ``` curl -X POST 'http://127.0.0.1:5000/questions/2' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "answer": "Blood",
+    "category": 1,
+    "difficulty": 4,
+    "id": 22,
+    "question": "Hematology is a branch of medicine involving the study of what?"
+        }'
+    ```
 
 ## Testing
 To run the tests, run
