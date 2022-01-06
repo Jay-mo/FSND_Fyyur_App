@@ -87,7 +87,7 @@ GET ...
 POST ...
 DELETE ...
 
-GET '/api/v1.0/categories'
+GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
@@ -98,6 +98,25 @@ GET '/api/v1.0/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
+```
+
+GET /categories
+- General
+    - Returns a dictionary of categories and success values
+    - Sample: curl http://127.0.0.1:5000/categories
+
+```
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "success": true
+}
 ```
 
 
