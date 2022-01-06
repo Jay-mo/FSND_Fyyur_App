@@ -103,7 +103,7 @@ GET '/categories'
 GET /categories
 - General
     - Returns a dictionary of categories and success value
-    - Sample: curl ```http://127.0.0.1:5000/categories```
+    - Sample: ```curl http://127.0.0.1:5000/categories```
 
 ```
 {
@@ -123,7 +123,7 @@ GET /questions
 - General
     - Returns a list of question objects, success value, categories and current category
     - Results are paginated in groups of 10. Include a request argument of page to choose a page number
-- Sample: curl ```http://127.0.0.1:5000/questions?page=2```
+- Sample: ``` curl http://127.0.0.1:5000/questions?page=2```
 
 ```
 {
@@ -221,7 +221,7 @@ POST /questions
 - General
     - Creates a new questions using the values provided. Returns a success value
 
-    - Sample: ``` curl -X POST 'http://127.0.0.1:5000/questions/2' -H 'Content-Type: application/json' \ -d '{
+    - Sample: ``` curl -X POST 'http://127.0.0.1:5000/questions/2' -H 'Content-Type: application/json'  -d '{
     "answer": "Blood",
     "category": 1,
     "difficulty": 4,
@@ -230,6 +230,104 @@ POST /questions
         }' ```
     
 
+```
+{
+        "success": True
+      }
+```
+
+POST /questions/search
+- General
+    -   Get questions based on a search term. It returns any question for which the search term is a substring of the question.
+    - Sample ``` curl -X POST 'http://127.0.0.1:5000/questions/search' -H 'Content-Type: application/json' -d '{
+    "searchTerm": "mirror" }'```
+
+
+```
+{
+    "currentCategory": null,
+    "questions": [
+        {
+            "answer": "The Palace of Versailles",
+            "category": 3,
+            "difficulty": 3,
+            "id": 14,
+            "question": "In which royal palace would you find the Hall of Mirrors?"
+        }
+    ],
+    "success": true,
+    "totalQuestions": 1
+}
+```
+
+
+GET /categories/<category_id>/questions
+- General 
+    - get questions based on category using the category id as reference.
+
+    - Sample: ```curl http://127.0.0.1:5000/categories/1/questions```
+
+```
+{
+    "currentCategory": "Science",
+    "questions": [
+        {
+            "answer": "The Liver",
+            "category": 1,
+            "difficulty": 4,
+            "id": 20,
+            "question": "What is the heaviest organ in the human body?"
+        },
+        {
+            "answer": "Alexander Fleming",
+            "category": 1,
+            "difficulty": 3,
+            "id": 21,
+            "question": "Who discovered penicillin?"
+        },
+        {
+            "answer": "Blood",
+            "category": 1,
+            "difficulty": 4,
+            "id": 24,
+            "question": "Hematology is a branch of medicine involving the study of what?"
+        },
+        {
+            "answer": "Blood",
+            "category": 1,
+            "difficulty": 4,
+            "id": 25,
+            "question": "Hematology is a branch of medicine involving the study of what?"
+        }
+    ],
+    "success": true,
+    "totalQuestions": 4
+}
+
+POST '/quizzes'
+- General
+    - This endpoints gets the question to the play the quiz. 
+    - The post request takes category and previous question parameters
+    - returns a random quesion within the category given but not part of the previous questions already given
+- Sample: ``` curl -X POST '192.168.128.202:5000/quizzes' -H 'Content-Type: application/json' -d '{
+    "previous_questions": [],
+    "quiz_category": 2 }'```
+
+```
+{
+    "question": {
+        "answer": "Jackson Pollock",
+        "category": 2,
+        "difficulty": 2,
+        "id": 19,
+        "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    },
+    "success": true
+}
+
+```
+
+```
 ## Testing
 To run the tests, run
 ```
