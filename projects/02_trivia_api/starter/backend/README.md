@@ -77,29 +77,6 @@ One note before you delve into your tasks: for each endpoint, you are expected t
 
 
 
-## Review Comment to the Students
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/api/v1.0/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
-
 GET /categories
 - General
     - Returns a dictionary of categories and success value
@@ -307,7 +284,7 @@ GET /categories/<category_id>/questions
 POST '/quizzes'
 - General
     - This endpoints gets the question to the play the quiz. 
-    - The post request takes category and previous question parameters
+    - The post request takes quiz category and previous question parameters
     - returns a random quesion within the category given but not part of the previous questions already given
 - Sample: ``` curl -X POST '192.168.128.202:5000/quizzes' -H 'Content-Type: application/json' -d '{
     "previous_questions": [],
@@ -326,6 +303,21 @@ POST '/quizzes'
 }
 
 ```
+
+### Error Handling
+Errors are returned as JSON objects in the following format:
+```
+{
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
+}
+```
+The API will return three error types when requests fail:
+- 400: Bad Request
+- 404: Resource Not Found
+- 422: Not Processable 
+- 405: Method not allowed
 
 
 ## Testing
