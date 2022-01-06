@@ -303,7 +303,7 @@ GET /categories/<category_id>/questions
     "success": true,
     "totalQuestions": 4
 }
-
+```
 POST '/quizzes'
 - General
     - This endpoints gets the question to the play the quiz. 
@@ -327,7 +327,7 @@ POST '/quizzes'
 
 ```
 
-```
+
 ## Testing
 To run the tests, run
 ```
