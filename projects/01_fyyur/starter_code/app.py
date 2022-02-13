@@ -16,7 +16,7 @@ from forms import *
 ##### My Imports
 
 from flask_migrate import Migrate
-import datetime
+from datetime import datetime
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -289,24 +289,50 @@ def show_venue(venue_id):
     data.upcoming_shows_count = 0
     data.past_shows_count = 0
 
-    for show in data.shows:
-      if show.start_time >= datetime.datetime.now():
-        data.upcoming_shows.append({
-          "artist_id": show.artist_id,
-          "artist_name": show.artist.name,
-          "artist_image_link": show.artist.image_link,
-          "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
-        })
-        data.upcoming_shows_count += 1
 
-      else:
+    past_shows_query = db.session.query(Shows).join(Venue).filter(Shows.venue_id==venue_id).filter(Shows.start_time<datetime.now()).all()
+    upcoming_shows_query = db.session.query(Shows).join(Venue).filter(Shows.venue_id==venue_id).filter(Shows.start_time>datetime.now()).all()
+
+
+    for show in upcoming_shows_query:
+      
+      data.upcoming_shows.append({
+        "artist_id": show.artist_id,
+        "artist_name": show.artist.name,
+        "artist_image_link": show.artist.image_link,
+        "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+      })
+    
+    data.upcoming_shows_count =  len(upcoming_shows_query)
+
+    for show in past_shows_query:
         data.past_shows.append({
           "artist_id": show.artist_id,
           "artist_name": show.artist.name,
           "artist_image_link": show.artist.image_link,
           "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
         })
-        data.past_shows_count += 1
+    
+    data.past_shows_count =  len(past_shows_query)
+
+    # for show in data.shows:
+    #   if show.start_time >= datetime.datetime.now():
+    #     data.upcoming_shows.append({
+    #       "artist_id": show.artist_id,
+    #       "artist_name": show.artist.name,
+    #       "artist_image_link": show.artist.image_link,
+    #       "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+    #     })
+    #     data.upcoming_shows_count += 1
+
+    #   else:
+    #     data.past_shows.append({
+    #       "artist_id": show.artist_id,
+    #       "artist_name": show.artist.name,
+    #       "artist_image_link": show.artist.image_link,
+    #       "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+    #     })
+    #     data.past_shows_count += 1
     return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
@@ -517,25 +543,51 @@ def show_artist(artist_id):
     data.past_shows = []
     data.upcoming_shows_count = 0
     data.past_shows_count = 0
-    
-    for show in data.shows:
-      if show.start_time > datetime.datetime.now():
-        data.upcoming_shows.append({
-          "venue_id": show.venue_id,
-          "venue_name": show.venue.name,
-          "venue_image_link": show.venue.image_link,
-          "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
-        })
-        data.upcoming_shows_count += 1
 
-      else:
+
+    past_shows_query = db.session.query(Shows).join(Artist).filter(Shows.artist_id==artist_id).filter(Shows.start_time<datetime.now()).all()
+    upcoming_shows_query = db.session.query(Shows).join(Artist).filter(Shows.artist_id==artist_id).filter(Shows.start_time>datetime.now()).all()
+
+
+    for show in upcoming_shows_query:
+      
+      data.upcoming_shows.append({
+        "venue_id": show.venue_id,
+        "venue_name": show.venue.name,
+        "venue_image_link": show.venue.image_link,
+        "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+      })
+    
+    data.upcoming_shows_count =  len(upcoming_shows_query)
+
+    for show in past_shows_query:
         data.past_shows.append({
           "venue_id": show.venue_id,
           "venue_name": show.venue.name,
           "venue_image_link": show.venue.image_link,
           "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
         })
-        data.past_shows_count += 1
+    
+    data.past_shows_count =  len(past_shows_query)
+    
+    # for show in data.shows:
+    #   if show.start_time > datetime.datetime.now():
+    #     data.upcoming_shows.append({
+    #       "venue_id": show.venue_id,
+    #       "venue_name": show.venue.name,
+    #       "venue_image_link": show.venue.image_link,
+    #       "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+    #     })
+    #     data.upcoming_shows_count += 1
+
+    #   else:
+    #     data.past_shows.append({
+    #       "venue_id": show.venue_id,
+    #       "venue_name": show.venue.name,
+    #       "venue_image_link": show.venue.image_link,
+    #       "start_time": show.start_time.strftime("%d/%m/%Y, %H:%M")
+    #     })
+    #     data.past_shows_count += 1
 
 
     return render_template('pages/show_artist.html', artist=data)
