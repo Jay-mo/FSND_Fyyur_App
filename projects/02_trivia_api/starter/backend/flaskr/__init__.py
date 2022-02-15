@@ -207,15 +207,18 @@ def create_app(test_config=None):
   '''
   @app.route('/categories/<category_id>/questions')
   def get_category_questions(category_id):
-    question_list = Question.query.filter(Question.category == category_id).all()
-    current_category = Category.query.get(category_id).type
+    try:
+      question_list = Question.query.filter(Question.category == category_id).all()
+      current_category = Category.query.get(category_id).type
 
-    return jsonify({
-      'success': True,
-      'questions': [ question.format() for question in question_list ],
-      'totalQuestions': len(question_list),
-      'currentCategory': current_category
-    })
+      return jsonify({
+        'success': True,
+        'questions': [ question.format() for question in question_list ],
+        'totalQuestions': len(question_list),
+        'currentCategory': current_category
+      })
+    except:
+      abort(404)
 
     
 
@@ -234,31 +237,38 @@ def create_app(test_config=None):
   '''
   @app.route('/quizzes', methods=['POST'])
   def post_play_quiz():
-    body = request.get_json()
 
-    previous_questions = body.get("previous_questions", None)
-    print(previous_questions)
-    quiz_category = body.get("quiz_category", None)
-    print(quiz_category)
+    try:
+      body = request.get_json()
 
-    questions_for_category = Question.query.filter(Question.category==quiz_category['id']).all()
+      previous_questions = body.get("previous_questions", None)
+      # print(previous_questions)
+      quiz_category = body.get("quiz_category", None)
+      # print(quiz_category)
 
-    possible_next_questions = [ question for question in questions_for_category if question.id not in previous_questions]
-    
-    if possible_next_questions:
-      next_question = random.choice(possible_next_questions)
+      if quiz_category['id'] == 0:
+        questions_for_category = Question.query.all()
 
-      return jsonify({
-        "success": True,
-        "question": next_question.format()
-      })
-    else:
-      next_question = None
-      return jsonify({
-        "success": True,
-        "question": None
-      })
+      else:
+        questions_for_category = Question.query.filter(Question.category==quiz_category['id']).all()
 
+      possible_next_questions = [ question for question in questions_for_category if question.id not in previous_questions]
+      
+      if possible_next_questions:
+        next_question = random.choice(possible_next_questions)
+
+        return jsonify({
+          "success": True,
+          "question": next_question.format()
+        })
+      else:
+        next_question = None
+        return jsonify({
+          "success": True,
+          "question": None
+        })
+    except:
+      abort(422)
 
 
   '''
@@ -275,7 +285,7 @@ def create_app(test_config=None):
     }), 404)
 
   @app.errorhandler(400)
-  def not_found(error):
+  def bad_request(error):
     return ( jsonify({
       "success": False,
       "error": 400,
@@ -292,7 +302,7 @@ def create_app(test_config=None):
       )
 
   @app.errorhandler(405)
-  def not_found(error):
+  def method_not_allowed(error):
       return ( jsonify({
         "success": False, 
         "error": 405, 

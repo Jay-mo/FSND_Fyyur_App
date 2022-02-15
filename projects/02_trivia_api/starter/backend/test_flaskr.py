@@ -17,7 +17,7 @@ class TriviaTestCase(unittest.TestCase):
         self.database_name = "trivia_test"
         database_username = os.getenv('DBUSER')
         database_password = os.getenv('DBPASS')
-        self.database_path = "postgres://{}:{}@{}/{}".format(database_username, database_password,'localhost:5432', self.database_name)
+        self.database_path = "postgresql://{}:{}@{}/{}".format(database_username, database_password,'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
         # binds the app to the current context
@@ -34,6 +34,16 @@ class TriviaTestCase(unittest.TestCase):
             "question": "What is the capital city of Ghana"
         }
 
+        self.quiz_data = {
+                "previous_questions": [],
+                "quiz_category" : {
+                "id": 1,
+                "type": "Science"
+                } 
+            }
+
+        
+
 
     def tearDown(self):
         """Executed after reach test"""
@@ -48,7 +58,7 @@ class TriviaTestCase(unittest.TestCase):
     """
 
     def test_get_all_categories(self):
-        res = self.client().get("/")
+        res = self.client().get("/categories")
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -94,6 +104,43 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 405)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "method not allowed")
+
+    def test_get_question_by_category(self):
+        res = self.client().get("/categories/{}/questions".format(self.new_question["category"]))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["currentCategory"])
+        self.assertTrue(data["questions"])
+    
+    def test_404_get_question_by_category(self):
+        res = self.client().get("/categories/{}/questions".format('25'))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data['message'], "resource not found")
+
+
+    
+    def test_play_quiz(self):
+        res = self.client().post("/quizzes", json=self.quiz_data)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["question"])
+
+
+    def test_422_play_quiz(self):
+        res = self.client().post("/quizzes", json={})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["message"], "unprocessable")
+
 
     def test_delete_question(self):
 
