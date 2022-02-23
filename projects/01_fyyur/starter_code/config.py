@@ -11,3 +11,5 @@ DEBUG = True
 
 # TODO IMPLEMENT DATABASE URL'
 SQLALCHEMY_DATABASE_URI = 'postgresql://ubuntu:onojaylinux@localhost:5432/fyyur_db'
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
