@@ -8,8 +8,14 @@ DEBUG = True
 
 # Connect to the database
 
-
+database_name = "fyyur_db"
+database_username = os.getenv('DBUSER')
+database_password = os.getenv('DBPASS')
 # TODO IMPLEMENT DATABASE URL'
-SQLALCHEMY_DATABASE_URI = 'postgresql://ubuntu:onojaylinux@localhost:5432/fyyur_db'
+SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}/{}".format(database_username, database_password,'localhost:5432', database_name)
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+
+
