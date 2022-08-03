@@ -8,7 +8,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from models import setup_db, db, Actors, Movies
 from dateutil.parser import parse
-from auth_lib import require_auth, get_token_auth_header
+from auth_lib import require_auth, get_token_auth_header, AuthError
 
 def create_app(test_config=None):
   # create and configure the app
@@ -27,14 +27,7 @@ def create_app(test_config=None):
   @require_auth("read:movies")
   def get_movies():
     all_movies = Movies.query.all()
-
     data = [ movie.format() for movie in all_movies ]
-
-    # print(data)
-
-    
-
-    # return jsonify(all_movies)
     return jsonify(data)
 
 
@@ -42,12 +35,7 @@ def create_app(test_config=None):
   @require_auth("read:actors")
   def get_actors():
     all_actors = Actors.query.all()
-
     data = [actor.format() for actor in all_actors]
-
-    print(data)
-
-    # return jsonify(all_actors)
     return jsonify(data)
 
 
@@ -79,6 +67,7 @@ def create_app(test_config=None):
   @require_auth("post:actor")
   def post_actors():
     request_body = request.json
+    print(request_body)
 
     
     name = request_body["name"]
@@ -101,7 +90,7 @@ def create_app(test_config=None):
 
 
   @app.route("/movies/<int:movie_id>", methods=["DELETE"])
-  @require_auth("delete:movies")
+  @require_auth("delete:movie")
   def delete_movies(movie_id):
 
     movie_to_delete = db.session.query(Movies).filter(Movies.id == movie_id).first()
@@ -124,7 +113,7 @@ def create_app(test_config=None):
 
 
   @app.route("/movies/<int:movie_id>", methods=["PATCH"])
-  @require_auth("modify:movies")
+  @require_auth("modify:movie")
   def patch_movies(movie_id):
     movie_to_patch = db.session.query(Movies).filter(Movies.id == movie_id).first()
     request_body = request.json
@@ -196,6 +185,57 @@ def create_app(test_config=None):
       return jsonify("No success")
 
 
+  
+
+  @app.errorhandler(AuthError)
+  def auth_error_handler(err):
+    return (jsonify(err.error), err.status_code)
+
+
+  @app.errorhandler(422)
+  def unprocessable(error):
+      return (jsonify({
+          "success": False,
+          "error": 422,
+          "message": "unprocessable"
+      }), 422)
+
+  @app.errorhandler(404)
+  def unprocessable(error):
+      return (jsonify({
+          "success": False,
+          "error": 404,
+          "message": "resource not found"
+      }), 404)
+
+  @app.errorhandler(400)
+  def bad_request(error):
+    return ( jsonify({
+      "success": False,
+      "error": 400,
+      "message": "bad request"
+    }), 400)
+
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+      return ( jsonify({
+        "success": False, 
+        "error": 405, 
+        "message": "method not allowed"
+        }),405,
+      )
+
+  @app.errorhandler(401)
+  def method_not_allowed(error):
+      return ( jsonify({
+        "success": False, 
+        "error": 401, 
+        "message": "not authorized"
+        }),401,
+      )
+
+
+
   return app
 
 APP = create_app()
@@ -212,7 +252,7 @@ migrate = Migrate(APP,db)
 
 if __name__ == '__main__':
 
-  APP.run(host='0.0.0.0', port=8080, debug=True)
+  APP.run(host='0.0.0.0', port=5000, debug=True)
 
 
 
